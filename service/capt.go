@@ -28,6 +28,7 @@ func GetCaptcha() (id string, b64s string) {
 	}
 	return id, b64s
 }
+
 func VerityCaptcha(id string, ret_captcha string) bool {
 	return store.Verify(id, ret_captcha, true)
 }

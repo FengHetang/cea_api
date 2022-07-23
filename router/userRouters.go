@@ -16,7 +16,10 @@ import (
 func UserRouters(r *gin.Engine) {
 	UserRouter := r.Group("/user")
 	{
-		UserRouter.GET("/get_vercode", controller.VerCode)
+		UserRouter.GET("/get_vercode", controller.GetVerCode)
+		UserRouter.GET("/get_unit", controller.GetUnit)
+		UserRouter.GET("/get_department", controller.GetDepart)
 		UserRouter.GET("/val_vercode", controller.ValVerCode)
+		UserRouter.GET("/login", controller.Login)
 	}
 }
