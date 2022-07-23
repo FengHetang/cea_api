@@ -13,18 +13,6 @@ import (
 	"github.com/mojocn/base64Captcha"
 )
 
-type Store interface {
-	// Set sets the digits for the captcha id.
-	Set(id string, value string)
-
-	// Get returns stored digits for the captcha id. Clear indicates
-	// whether the captcha must be deleted from the store.
-	Get(id string, clear bool) string
-
-	//Verify captcha's answer directly
-	Verify(id, answer string, clear bool) bool
-}
-
 var store = base64Captcha.DefaultMemStore
 
 func GetCaptcha() (id string, b64s string) {
@@ -33,9 +21,13 @@ func GetCaptcha() (id string, b64s string) {
 	// 生成base64图片
 	c := base64Captcha.NewCaptcha(driver, store)
 	id, b64s, err := c.Generate()
+
 	if err != nil {
 		fmt.Println("Register GetCaptchaPhoto get base64Captcha has err:", err)
 		return "", ""
 	}
 	return id, b64s
+}
+func VerityCaptcha(id string, ret_captcha string) bool {
+	return store.Verify(id, ret_captcha, true)
 }
