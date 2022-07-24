@@ -21,5 +21,6 @@ func UserRouters(r *gin.Engine) {
 		UserRouter.GET("/get_department", controller.GetDepart)
 		UserRouter.GET("/val_vercode", controller.ValVerCode)
 		UserRouter.GET("/login", controller.Login)
+		UserRouter.GET("/login1", controller.ValToken)
 	}
 }

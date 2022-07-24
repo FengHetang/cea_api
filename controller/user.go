@@ -10,6 +10,7 @@ package controller
 
 import (
 	"cea_api/models"
+	"cea_api/pkg/jwt"
 	"cea_api/service"
 	"cea_api/service/LoginServer"
 	"github.com/gin-gonic/gin"
@@ -46,10 +47,26 @@ func Login(c *gin.Context) {
 	user := LoginServer.UserLogin{username, password, unit, department}
 	realneme, usertype := user.LoginCheck()
 
+	token_ := jwt.TokenData{Realname: realneme, UserType: usertype, Unit: unit, Department: department}
+	token, _ := token_.GenToken(realneme, usertype, unit, department)
 	c.JSON(200, gin.H{
 		"realneme": realneme,
 		"usertype": usertype,
+		"token":    token,
 	})
+}
+func ValToken(c *gin.Context) {
+	token := c.Query("token")
+	tokenvaldata, _ := jwt.ParseToken(token)
+	if tokenvaldata != nil {
+		c.JSON(200, gin.H{
+			"data": tokenvaldata,
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"msg": "token已过期",
+		})
+	}
 }
 
 func ValVerCode(c *gin.Context) {
