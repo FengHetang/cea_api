@@ -11,6 +11,7 @@ package controller
 import (
 	"cea_api/models"
 	"cea_api/service"
+	"cea_api/service/LoginServer"
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,14 +39,16 @@ func GetDepart(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	//unit := c.Query("unit")
-	//department := c.Query("department")
-	//username := c.Query("username")
-	//password := c.Query("password")
-	userLiset := []models.User{}
-	models.DB.Find(&userLiset)
+	username := c.Query("username")
+	password := c.Query("password")
+	unit := c.Query("unit")
+	department := c.Query("department")
+	user := LoginServer.UserLogin{username, password, unit, department}
+	realneme, usertype := user.LoginCheck()
+
 	c.JSON(200, gin.H{
-		"resule": userLiset,
+		"realneme": realneme,
+		"usertype": usertype,
 	})
 }
 
