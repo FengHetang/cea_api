@@ -9,18 +9,19 @@
 package router
 
 import (
-	"cea_api/controller"
+	"cea_api/controller/UserController"
 	"github.com/gin-gonic/gin"
 )
 
 func UserRouters(r *gin.Engine) {
 	UserRouter := r.Group("/user")
 	{
-		UserRouter.GET("/get_vercode", controller.GetVerCode)
-		UserRouter.GET("/get_unit", controller.GetUnit)
-		UserRouter.GET("/get_department", controller.GetDepart)
-		UserRouter.GET("/val_vercode", controller.ValVerCode)
-		UserRouter.GET("/login", controller.Login)
-		UserRouter.GET("/login1", controller.ValToken)
+		UserRouter.GET("/get_vercode", UserController.GetVerCode)   // 获取验证码
+		UserRouter.GET("/get_unit", UserController.GetUnit)         // 获取单位
+		UserRouter.GET("/get_department", UserController.GetDepart) // 获取部门
+		UserRouter.GET("/val_vercode", UserController.ValVerCode)   // 验证 验证码
+		UserRouter.GET("/login", UserController.Login)              // 登录
+		UserRouter.GET("/login1", UserController.ValToken)
+		UserRouter.POST("/updatepwd", UserController.UserUpdatePwd)
 	}
 }

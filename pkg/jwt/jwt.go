@@ -15,6 +15,7 @@ import (
 import "github.com/dgrijalva/jwt-go"
 
 type TokenData struct {
+	UserId     string
 	Realname   string
 	UserType   string
 	Unit       string
@@ -22,11 +23,12 @@ type TokenData struct {
 	jwt.StandardClaims
 }
 
-const TokenExperieDuration = time.Minute * 1
+const TokenExperieDuration = time.Hour * 2
 
 var MySecret = []byte("thisislaoliusecret")
 
-func (c *TokenData) GenToken(realname, usertype, unit, department string) (string, error) {
+func (c *TokenData) GenToken(userid, realname, usertype, unit, department string) (string, error) {
+	c.UserId = userid
 	c.Realname = realname
 	c.Department = department
 	c.UserType = usertype

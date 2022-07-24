@@ -6,13 +6,14 @@
  * @Date: 2022/7/22 2:25
  */
 
-package controller
+package UserController
 
 import (
 	"cea_api/models"
 	"cea_api/pkg/jwt"
 	"cea_api/service"
 	"cea_api/service/LoginServer"
+	"cea_api/service/UserServer"
 	"github.com/gin-gonic/gin"
 )
 
@@ -45,10 +46,10 @@ func Login(c *gin.Context) {
 	unit := c.Query("unit")
 	department := c.Query("department")
 	user := LoginServer.UserLogin{username, password, unit, department}
-	realneme, usertype := user.LoginCheck()
+	realneme, usertype, userid := user.LoginCheck()
 
-	token_ := jwt.TokenData{Realname: realneme, UserType: usertype, Unit: unit, Department: department}
-	token, _ := token_.GenToken(realneme, usertype, unit, department)
+	token_ := jwt.TokenData{Realname: realneme, UserType: usertype, Unit: unit, Department: department, UserId: userid}
+	token, _ := token_.GenToken(userid, realneme, usertype, unit, department)
 	c.JSON(200, gin.H{
 		"realneme": realneme,
 		"usertype": usertype,
@@ -82,4 +83,14 @@ func ValVerCode(c *gin.Context) {
 			"res": "验证码正确",
 		})
 	}
+}
+
+func UserUpdatePwd(c *gin.Context) {
+	NewPwd := c.Query("newpwd")
+	OldPwd := c.Query("oldpwd")
+	token := c.Request.Header.Get("token")
+	res := UserServer.UpdateUserPwd(OldPwd, NewPwd, token)
+	c.JSON(200, gin.H{
+		"res": res,
+	})
 }
