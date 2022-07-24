@@ -17,6 +17,6 @@ type UserLogin struct {
 	Department string `json:"department"`
 }
 
-func (u *UserLogin) LoginCheck() (realneme, usertype, userid string) {
+func (u *UserLogin) LoginCheck() (realneme, usertype, userid, res string) {
 	return models.LoginCheck(u.Name, u.Password, u.Unit, u.Department)
 }

@@ -27,19 +27,22 @@ func (User) TableName() string {
 	return "User"
 }
 
-func LoginCheck(name, password, unit, department string) (realneme, usertype, userid string) {
+func LoginCheck(name, password, unit, department string) (realneme, usertype, userid, msg string) {
 	var user User
-	DB.Where("name = ? and password = ? and unit = ? and department = ?", name, password, unit, department).First(&user)
+	DB.Where("name = ? and unit = ? and department = ?", name, unit, department).First(&user)
 	if user.ID > 0 {
-		realneme = user.Realname
-		usertype = user.Usertype
-		userid = user.Userid
-		return realneme, usertype, userid
+		if user.Password != password {
+			msg = "密码错误"
+			return realneme, usertype, userid, msg
+		} else {
+			realneme = user.Realname
+			usertype = user.Usertype
+			userid = user.Userid
+			return realneme, usertype, userid, msg
+		}
 	} else {
-		realneme = ""
-		usertype = ""
-		userid = ""
-		return realneme, usertype, userid
+		msg = "查无此人"
+		return realneme, usertype, userid, msg
 	}
 }
 func UserUpdatePwd(oldpwd, newpwd, token string) (res string) {

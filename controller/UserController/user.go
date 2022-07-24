@@ -46,15 +46,20 @@ func Login(c *gin.Context) {
 	unit := c.Query("unit")
 	department := c.Query("department")
 	user := LoginServer.UserLogin{username, password, unit, department}
-	realneme, usertype, userid := user.LoginCheck()
-
-	token_ := jwt.TokenData{Realname: realneme, UserType: usertype, Unit: unit, Department: department, UserId: userid}
-	token, _ := token_.GenToken(userid, realneme, usertype, unit, department)
-	c.JSON(200, gin.H{
-		"realneme": realneme,
-		"usertype": usertype,
-		"token":    token,
-	})
+	realneme, usertype, userid, res := user.LoginCheck()
+	if res != "" {
+		c.JSON(200, gin.H{
+			"msg": res,
+		})
+	} else {
+		token_ := jwt.TokenData{Realname: realneme, UserType: usertype, Unit: unit, Department: department, UserId: userid}
+		token, _ := token_.GenToken(userid, realneme, usertype, unit, department)
+		c.JSON(200, gin.H{
+			"realneme": realneme,
+			"usertype": usertype,
+			"token":    token,
+		})
+	}
 }
 func ValToken(c *gin.Context) {
 	token := c.Query("token")
