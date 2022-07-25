@@ -99,3 +99,13 @@ func UserUpdatePwd(c *gin.Context) {
 		"res": res,
 	})
 }
+func UserAdd(c *gin.Context) {
+
+	unit = c.Query("unit")
+	deaprtment = c.Query("department")
+	realname = c.Query("realname")
+	username = c.Query("username")
+	password = c.Query("password")
+	usertyper = c.Query("userptype")
+
+}
