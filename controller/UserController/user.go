@@ -14,6 +14,7 @@ import (
 	"cea_api/service"
 	"cea_api/service/LoginServer"
 	"cea_api/service/UserServer"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -100,12 +101,11 @@ func UserUpdatePwd(c *gin.Context) {
 	})
 }
 func UserAdd(c *gin.Context) {
-
-	unit = c.Query("unit")
-	deaprtment = c.Query("department")
-	realname = c.Query("realname")
-	username = c.Query("username")
-	password = c.Query("password")
-	usertyper = c.Query("userptype")
-
+	unit := c.Query("unit")
+	deaprtment := c.Query("department")
+	realname := c.Query("realname")
+	username := c.Query("username")
+	password := c.Query("password")
+	usertyper := c.Query("userptype")
+	fmt.Println(unit, deaprtment, realname, username, password, usertyper)
 }
