@@ -17,8 +17,6 @@ func UserRouters(r *gin.Engine) {
 	UserRouter := r.Group("/user")
 	{
 		UserRouter.GET("/get_vercode", UserController.GetVerCode)   // 获取验证码
-		UserRouter.GET("/get_unit", UserController.GetUnit)         // 获取单位
-		UserRouter.GET("/get_department", UserController.GetDepart) // 获取部门
 		UserRouter.GET("/val_vercode", UserController.ValVerCode)   // 验证 验证码
 		UserRouter.GET("/login", UserController.Login)              // 登录
 		UserRouter.GET("/ValToken", UserController.ValToken)        //验证token

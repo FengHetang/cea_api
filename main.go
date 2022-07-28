@@ -16,6 +16,7 @@ import (
 func main() {
 	r := gin.Default()
 	router.UserRouters(r)
+	router.UnitrsRouters(r)
 
 	err := r.Run()
 	if err != nil {

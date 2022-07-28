@@ -10,6 +10,7 @@ package models
 
 import (
 	"cea_api/pkg/jwt"
+	"fmt"
 )
 
 type User struct {
@@ -54,5 +55,20 @@ func UserUpdatePwd(oldpwd, newpwd, token string) (res string) {
 		return "密码更新成功！"
 	} else {
 		return "旧密码输入错误！"
+	}
+}
+
+func AddUser(usertype, unit, realname, deaprtment, userid, username, password string) (res string) {
+	var user User
+	DB.Where("userid = ?", userid).First(&user)
+	if user.ID > 0 {
+		return "该用户已存在！"
+	} else {
+		result := DB.Create(&User{Userid: userid, Name: username, Password: password, Realname: realname, Usertype: usertype, Unit: unit, Department: deaprtment})
+		if result.Error != nil {
+			fmt.Println(result.Error)
+			return "新增用户失败"
+		}
+		return "新增用户成功！"
 	}
 }

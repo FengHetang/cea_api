@@ -9,12 +9,10 @@
 package UserController
 
 import (
-	"cea_api/models"
 	"cea_api/pkg/jwt"
 	"cea_api/service"
 	"cea_api/service/LoginServer"
 	"cea_api/service/UserServer"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,21 +21,6 @@ func GetVerCode(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"codeid":  id,
 		"b64data": b64s,
-	})
-}
-
-func GetUnit(c *gin.Context) {
-	unitList := []models.Unit{}
-	models.DB.Find(&unitList)
-	c.JSON(200, gin.H{
-		"data": unitList,
-	})
-}
-func GetDepart(c *gin.Context) {
-	unitmark := c.Query("unit_mark")
-	departlist := service.GerDepart(unitmark)
-	c.JSON(200, gin.H{
-		"data": departlist,
 	})
 }
 
@@ -100,12 +83,33 @@ func UserUpdatePwd(c *gin.Context) {
 		"res": res,
 	})
 }
+
 func UserAdd(c *gin.Context) {
+	userid := c.Query("userid")
 	unit := c.Query("unit")
 	deaprtment := c.Query("department")
 	realname := c.Query("realname")
 	username := c.Query("username")
 	password := c.Query("password")
-	usertyper := c.Query("userptype")
-	fmt.Println(unit, deaprtment, realname, username, password, usertyper)
+	usertype := c.Query("userptype")
+	token := c.Request.Header.Get("token")
+	userdata, _ := jwt.ParseToken(token)
+	if userdata == nil {
+		c.JSON(200, gin.H{
+			"res": "token已过期",
+		})
+	} else {
+		if userdata.UserType == "管理员" && userdata.Unit != unit {
+			c.JSON(200, gin.H{
+				"res": "仅支持创建本单位新用户",
+			})
+		} else {
+			addserver := &UserServer.User{userid, realname, username, password, unit, deaprtment, usertype}
+			res := addserver.AddUser()
+			c.JSON(200, gin.H{
+				"res": res,
+			})
+		}
+	}
+
 }
