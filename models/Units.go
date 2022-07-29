@@ -27,7 +27,6 @@ func (Department) TableName() string {
 func AddUnit(unit, mark string) (res string) {
 	var u Unit
 	DB.Where("Unit=?", unit).First(&u)
-	fmt.Println(u)
 	if u.Id > 0 {
 		return "该单位已存在"
 	} else {
@@ -40,21 +39,26 @@ func AddUnit(unit, mark string) (res string) {
 }
 
 type Department struct {
-	ID         int    `json:"id"`
+	ID         int
 	Department string `json:"department"`
-	SerNum     string `json:"serNum"`
-	UnitMark   string `json:"unitMark"`
+	SerNum     int    `json:"ser_num"`
+	UnitMark   string `json:"unit_mark"`
 }
 
 func AddDepaerment(department, unitmark string) (res string) {
 	var d Department
-	DB.Where("Department = ? and Unitmark = ?", department, unitmark).Find(&d)
+	DB.Where("department = ? and unit_mark = ?", department, unitmark).Find(&d)
 	if d.ID > 0 {
 		return "该部门已存在"
 	} else {
 		departmentList := []Department{}
-		result := DB.Where("UnitMark=?", unitmark).Find(&departmentList)
-		fmt.Println(result)
+		DB.Where("unit_mark =?", unitmark).Find(&departmentList)
+		sernum := len(departmentList) + 1
+		fmt.Println(sernum)
+		result := DB.Create(&Department{Department: department, SerNum: sernum, UnitMark: unitmark})
+		if result.Error != nil {
+			return "部门新增失败"
+		}
 	}
-	return "1111"
+	return "新增部门成功！"
 }

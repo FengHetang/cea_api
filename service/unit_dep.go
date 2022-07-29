@@ -12,6 +12,6 @@ import "cea_api/models"
 
 func GerDepart(unitmark string) (departlist []models.Department) {
 	departlist = []models.Department{}
-	models.DB.Where("UnitMark = ? ", unitmark).Find(&departlist)
+	models.DB.Where("unit_mark = ? ", unitmark).Find(&departlist)
 	return departlist
 }
