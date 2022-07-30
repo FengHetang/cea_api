@@ -10,7 +10,6 @@ package models
 
 import (
 	"cea_api/pkg/jwt"
-	"fmt"
 )
 
 type User struct {
@@ -35,6 +34,13 @@ type LoginUserRes struct {
 	Usertype   string
 }
 
+func GerUserCount(unit, department string) (data int) {
+	userlist := []User{}
+	DB.Where("unit = ? and department = ?", unit, department).Find(&userlist)
+	data = len(userlist) + 1
+	return data
+}
+
 func GetUserData(name, unit, department string) (userid, realname, usertype string) {
 	var user User
 	DB.Where("name = ? and unit = ? and department = ?", name, unit, department).Find(&user)
@@ -48,6 +54,7 @@ func GetUserData(name, unit, department string) (userid, realname, usertype stri
 	}
 }
 
+// LoginCheck 登录检查
 func LoginCheck(name, password, unit, department string) (code int) {
 	var user User
 	DB.Where("name = ? and unit = ? and department = ?", name, unit, department).Find(&user)
@@ -62,7 +69,7 @@ func LoginCheck(name, password, unit, department string) (code int) {
 	}
 }
 
-//
+// ValOldPwd  验证旧密码
 func ValOldPwd(oldpwd, token string) (res bool) {
 	var user User
 	tokenvaldata, _ := jwt.ParseToken(token)
@@ -87,17 +94,22 @@ func UserUpdatePwd(newpwd, token string) (res bool) {
 	}
 }
 
-func AddUser(usertype, unit, realname, deaprtment, userid, username, password string) (res string) {
-	var user User
-	DB.Where("userid = ?", userid).First(&user)
-	if user.ID > 0 {
-		return "该用户已存在！"
+// ValUserName 验证该用户名是否存在
+func ValUserName(unit, department, username string) (res bool) {
+	var u User
+	DB.Where("unit = ? and department = ? and name = ?", unit, department, username).Find(&u)
+	if u.ID > 0 {
+		return false
 	} else {
-		result := DB.Create(&User{Userid: userid, Name: username, Password: password, Realname: realname, Usertype: usertype, Unit: unit, Department: deaprtment})
-		if result.Error != nil {
-			fmt.Println(result.Error)
-			return "新增用户失败"
-		}
-		return "新增用户成功！"
+		return true
 	}
+}
+
+// AddUser 新增用户
+func AddUser(username, realname, password, usertype, unit, deaprtment, UserId string) (res bool) {
+	result := DB.Create(&User{Userid: UserId, Name: username, Password: password, Realname: realname, Usertype: usertype, Unit: unit, Department: deaprtment})
+	if result.Error != nil {
+		return false
+	}
+	return true
 }

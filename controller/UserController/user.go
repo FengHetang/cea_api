@@ -101,16 +101,36 @@ func UserUpdatePwd(c *gin.Context) {
 	}
 }
 
+// ValUserName 验证用户名是否已经存在
+func ValUserName(c *gin.Context) {
+	app := app.Gin{c}
+	unit := c.Query("unit")
+	depaerment := c.Query("department")
+	username := c.Query("username")
+	ValUserServer := &UserServer.User{Unit: unit, Department: depaerment, Name: username}
+	res := ValUserServer.ValUserExists()
+	if res == true {
+		app.Response(http.StatusOK, e.Success, nil)
+	} else {
+		app.Response(http.StatusOK, e.UserExits, nil)
+	}
+}
+
 // UserAdd  新增用户
 func UserAdd(c *gin.Context) {
+	app := app.Gin{c}
 	unit := c.Query("unit")
 	deaprtment := c.Query("department")
 	realname := c.Query("realname")
 	username := c.Query("username")
 	password := c.Query("password")
 	usertype := c.Query("userptype")
-	addserver := &UserServer.User{ Realname: realname,Name: username,Password: password,Unit: unit,Department: deaprtment, Usertype: usertype}
+	addserver := &UserServer.User{Realname: realname, Name: username, Password: password, Unit: unit, Department: deaprtment, Usertype: usertype}
 	res := addserver.AddUser()
+	if res == true {
+		app.Response(http.StatusOK, e.Success, nil)
+	} else {
+		app.Response(http.StatusOK, e.UserCreateError, nil)
 	}
 
 }

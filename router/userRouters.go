@@ -22,6 +22,7 @@ func UserRouters(r *gin.Engine) {
 		UserRouter.GET("/ValToken", UserController.ValToken)        //验证token
 		UserRouter.POST("/valoldpwd", UserController.ValOldPwd)     //验证token
 		UserRouter.POST("/updatepwd", UserController.UserUpdatePwd) //修改密码
-		UserRouter.POST("/adduser", UserController.UserAdd)
+		UserRouter.POST("/valusername", UserController.ValUserName) // 验证用户名是否存在
+		UserRouter.POST("/adduser", UserController.UserAdd)         // 新增用户
 	}
 }

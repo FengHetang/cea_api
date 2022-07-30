@@ -24,6 +24,12 @@ func (Department) TableName() string {
 	return "Department"
 }
 
+func GetUnitMark(unit string) (data string) {
+	var u Unit
+	DB.Where("Unit = ?", unit).First(&u)
+	data = u.Mark
+	return
+}
 func AddUnit(unit, mark string) (res string) {
 	var u Unit
 	DB.Where("Unit=?", unit).First(&u)
@@ -43,6 +49,14 @@ type Department struct {
 	Department string `json:"department"`
 	SerNum     int    `json:"ser_num"`
 	UnitMark   string `json:"unit_mark"`
+}
+
+func GetDepartSer(unitmark, department string) (data int) {
+	var d Department
+	DB.Where("department = ? and unit_mark = ?", department, unitmark).Find(&d)
+	data = d.SerNum
+	return
+
 }
 
 func AddDepaerment(department, unitmark string) (res string) {
