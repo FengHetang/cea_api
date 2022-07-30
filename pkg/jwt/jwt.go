@@ -39,7 +39,7 @@ func (c *TokenData) GenToken(userid, realname, usertype, unit, department string
 	return token.SignedString(MySecret)
 }
 
-// 解析token
+// ParseToken 解析token
 func ParseToken(tokenString string) (*TokenData, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &TokenData{}, func(token *jwt.Token) (i interface{}, err error) {
 		return MySecret, nil

@@ -28,24 +28,53 @@ func (User) TableName() string {
 	return "User"
 }
 
-func LoginCheck(name, password, unit, department string) (realneme, usertype, userid, msg string) {
+type LoginUserRes struct {
+	Realname   string
+	Unit       string
+	Department string
+	Usertype   string
+}
+
+func GetUserData(name, unit, department string) (userid, realname, usertype string) {
 	var user User
-	DB.Where("name = ? and unit = ? and department = ?", name, unit, department).First(&user)
+	DB.Where("name = ? and unit = ? and department = ?", name, unit, department).Find(&user)
 	if user.ID > 0 {
-		if user.Password != password {
-			msg = "密码错误"
-			return realneme, usertype, userid, msg
-		} else {
-			realneme = user.Realname
-			usertype = user.Usertype
-			userid = user.Userid
-			return realneme, usertype, userid, msg
-		}
+		userid := user.Userid
+		realname := user.Realname
+		usertype := user.Usertype
+		return userid, realname, usertype
 	} else {
-		msg = "查无此人"
-		return realneme, usertype, userid, msg
+		return
 	}
 }
+
+func LoginCheck(name, password, unit, department string) (code int) {
+	var user User
+	DB.Where("name = ? and unit = ? and department = ?", name, unit, department).Find(&user)
+	if user.ID > 0 {
+		if user.Password != password {
+			return 20004
+		} else {
+			return 200
+		}
+	} else {
+		return 20002
+	}
+}
+
+//
+func ValOldPwd(oldpwd, token string) (res bool) {
+	var user User
+	tokenvaldata, _ := jwt.ParseToken(token)
+	UserId := tokenvaldata.UserId
+	DB.Where("userid = ? ", UserId).Find(&user)
+	if user.Password == oldpwd {
+		return true
+	} else {
+		return false
+	}
+}
+
 func UserUpdatePwd(oldpwd, newpwd, token string) (res string) {
 	userdata, _ := jwt.ParseToken(token)
 	var user User

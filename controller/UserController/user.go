@@ -9,71 +9,86 @@
 package UserController
 
 import (
+	"cea_api/pkg/app"
+	"cea_api/pkg/e"
 	"cea_api/pkg/jwt"
 	"cea_api/service"
-	"cea_api/service/LoginServer"
 	"cea_api/service/UserServer"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
+// GetVerCode 获取验证码
 func GetVerCode(c *gin.Context) {
-	id, b64s := service.GetCaptcha()
-	c.JSON(200, gin.H{
-		"codeid":  id,
-		"b64data": b64s,
-	})
+	app := app.Gin{c}
+	res := service.GetCaptcha()
+	app.Response(200, e.Success, res)
 }
 
-func Login(c *gin.Context) {
-	username := c.Query("username")
-	password := c.Query("password")
-	unit := c.Query("unit")
-	department := c.Query("department")
-	user := LoginServer.UserLogin{username, password, unit, department}
-	realneme, usertype, userid, res := user.LoginCheck()
-	if res != "" {
-		c.JSON(200, gin.H{
-			"msg": res,
-		})
-	} else {
-		token_ := jwt.TokenData{Realname: realneme, UserType: usertype, Unit: unit, Department: department, UserId: userid}
-		token, _ := token_.GenToken(userid, realneme, usertype, unit, department)
-		c.JSON(200, gin.H{
-			"realneme": realneme,
-			"usertype": usertype,
-			"token":    token,
-		})
-	}
-}
-func ValToken(c *gin.Context) {
-	token := c.Query("token")
-	tokenvaldata, _ := jwt.ParseToken(token)
-	if tokenvaldata != nil {
-		c.JSON(200, gin.H{
-			"data": tokenvaldata,
-		})
-	} else {
-		c.JSON(200, gin.H{
-			"msg": "token已过期",
-		})
-	}
-}
-
+// ValVerCode 验证验证码
 func ValVerCode(c *gin.Context) {
+	app := app.Gin{c}
 	id := c.Query("codeid")
 	ret_captcha := c.Query("vercode")
 	res := service.VerityCaptcha(id, ret_captcha)
 	if res == false {
-		c.JSON(200, gin.H{
-			"res": "验证码错误",
-		})
+		app.Response(http.StatusOK, e.Valerror, nil)
 	} else {
-		c.JSON(200, gin.H{
-			"res": "验证码正确",
-		})
+		app.Response(http.StatusOK, e.Valright, nil)
 	}
 }
 
+// Login 登录
+func Login(c *gin.Context) {
+	app := app.Gin{c}
+	username := c.Query("username")
+	password := c.Query("password")
+	unit := c.Query("unit")
+	department := c.Query("department")
+	user := UserServer.UserLogin{username, password, unit, department}
+	code := user.LoginCheck()
+	switch code {
+	case 200:
+		result := UserServer.LoginRes{Name: username, Department: department, Unit: unit}
+		res := result.CreatToken()
+		app.Response(http.StatusOK, e.Success, res)
+	case 20004:
+		app.Response(http.StatusOK, e.UserPasswordError, nil)
+	case 20002:
+		app.Response(http.StatusOK, e.UserNoExits, nil)
+	default:
+		app.Response(http.StatusOK, e.Error, nil)
+	}
+}
+
+// ValToken 验证token
+func ValToken(c *gin.Context) {
+	app := app.Gin{c}
+	token := c.Query("token")
+	tokenvaldata, _ := jwt.ParseToken(token)
+	fmt.Println(tokenvaldata)
+	if tokenvaldata != nil {
+		app.Response(http.StatusOK, e.Success, tokenvaldata)
+	} else {
+		app.Response(http.StatusOK, e.CheckTokenTimeout, nil)
+	}
+}
+
+// 旧密码验证
+func ValOldPwd(c *gin.Context) {
+	app := app.Gin{c}
+	oldpwd := c.Query("oldpwd")
+	token := c.Request.Header.Get("token")
+	res := UserServer.ValOldPwd(oldpwd, token)
+	if res == true {
+		app.Response(http.StatusOK, e.Success, nil)
+	} else {
+		app.Response(http.StatusOK, e.OldPasswordError, nil)
+	}
+}
+
+// UserUpdatePwd 修改密码
 func UserUpdatePwd(c *gin.Context) {
 	NewPwd := c.Query("newpwd")
 	OldPwd := c.Query("oldpwd")

@@ -52,7 +52,7 @@ func AddDepaerment(department, unitmark string) (res string) {
 		return "该部门已存在"
 	} else {
 		departmentList := []Department{}
-		DB.Where("unit_mark =?", unitmark).Find(&departmentList)
+		DB.Where("unit_mark = ?", unitmark).Find(&departmentList)
 		sernum := len(departmentList) + 1
 		fmt.Println(sernum)
 		result := DB.Create(&Department{Department: department, SerNum: sernum, UnitMark: unitmark})

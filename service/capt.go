@@ -15,18 +15,24 @@ import (
 
 var store = base64Captcha.DefaultMemStore
 
-func GetCaptcha() (id string, b64s string) {
+type GetCap struct {
+	Id   string
+	Bs64 string
+}
+
+func GetCaptcha() (res interface{}) {
 	// 生成默认数字
 	driver := base64Captcha.DefaultDriverDigit
 	// 生成base64图片
 	c := base64Captcha.NewCaptcha(driver, store)
 	id, b64s, err := c.Generate()
-
+	result := GetCap{Id: id, Bs64: b64s}
+	res = result
 	if err != nil {
 		fmt.Println("Register GetCaptchaPhoto get base64Captcha has err:", err)
-		return "", ""
+		return
 	}
-	return id, b64s
+	return res
 }
 
 func VerityCaptcha(id string, ret_captcha string) bool {
