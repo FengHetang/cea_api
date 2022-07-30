@@ -75,7 +75,7 @@ func ValToken(c *gin.Context) {
 	}
 }
 
-// 旧密码验证
+// ValOldPwd 旧密码验证
 func ValOldPwd(c *gin.Context) {
 	app := app.Gin{c}
 	oldpwd := c.Query("oldpwd")
@@ -101,32 +101,16 @@ func UserUpdatePwd(c *gin.Context) {
 	}
 }
 
+// UserAdd  新增用户
 func UserAdd(c *gin.Context) {
-	userid := c.Query("userid")
 	unit := c.Query("unit")
 	deaprtment := c.Query("department")
 	realname := c.Query("realname")
 	username := c.Query("username")
 	password := c.Query("password")
 	usertype := c.Query("userptype")
-	token := c.Request.Header.Get("token")
-	userdata, _ := jwt.ParseToken(token)
-	if userdata == nil {
-		c.JSON(200, gin.H{
-			"res": "token已过期",
-		})
-	} else {
-		if userdata.UserType == "管理员" && userdata.Unit != unit {
-			c.JSON(200, gin.H{
-				"res": "仅支持创建本单位新用户",
-			})
-		} else {
-			addserver := &UserServer.User{userid, realname, username, password, unit, deaprtment, usertype}
-			res := addserver.AddUser()
-			c.JSON(200, gin.H{
-				"res": res,
-			})
-		}
+	addserver := &UserServer.User{ Realname: realname,Name: username,Password: password,Unit: unit,Department: deaprtment, Usertype: usertype}
+	res := addserver.AddUser()
 	}
 
 }
