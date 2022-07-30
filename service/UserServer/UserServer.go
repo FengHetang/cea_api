@@ -31,8 +31,8 @@ func ValOldPwd(oldpwd, token string) (res bool) {
 	return models.ValOldPwd(oldpwd, token)
 }
 
-func UpdateUserPwd(oldpwd, newpwd, token string) (res string) {
-	return models.UserUpdatePwd(oldpwd, newpwd, token)
+func UpdateUserPwd(newpwd, token string) (res bool) {
+	return models.UserUpdatePwd(newpwd, token)
 }
 
 type UserLogin struct {

@@ -21,9 +21,10 @@ const (
 	Valerror = 10010 // 验证码错误
 	Valright = 10011 // 验证码错误
 
-	UserExits         = 20001 // 用户已存在
-	UserNoExits       = 20002 // 用户不存在
-	UserCreate        = 20003 //用户创建失败
-	UserPasswordError = 20004 // 密码错误
-	OldPasswordError  = 20005 // 旧密码错误
+	UserExits            = 20001 // 用户已存在
+	UserNoExits          = 20002 // 用户不存在
+	UserCreate           = 20003 //用户创建失败
+	UserPasswordError    = 20004 // 密码错误
+	OldPasswordError     = 20005 // 旧密码错误
+	EditOldPasswordError = 20006 // 修改密码错误
 )

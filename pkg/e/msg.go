@@ -21,11 +21,12 @@ var magflags = map[int]string{
 	Valerror: "验证码错误",
 	Valright: "验证码正确",
 
-	UserExits:         "用户已存在",
-	UserNoExits:       "用户不存在",
-	UserCreate:        "用户创建失败",
-	UserPasswordError: "密码错误",
-	OldPasswordError:  "旧密码错误",
+	UserExits:            "用户已存在",
+	UserNoExits:          "用户不存在",
+	UserCreate:           "用户创建失败",
+	UserPasswordError:    "密码错误",
+	OldPasswordError:     "旧密码错误",
+	EditOldPasswordError: "修改密码错误",
 }
 
 func GetMsg(code int) string {

@@ -75,15 +75,15 @@ func ValOldPwd(oldpwd, token string) (res bool) {
 	}
 }
 
-func UserUpdatePwd(oldpwd, newpwd, token string) (res string) {
+func UserUpdatePwd(newpwd, token string) (res bool) {
 	userdata, _ := jwt.ParseToken(token)
 	var user User
 	DB.Where("userid = ?", userdata.UserId).First(&user)
-	if user.Password == oldpwd {
-		DB.Model(user).Where("userid = ?", userdata.UserId).Update("password", newpwd)
-		return "密码更新成功！"
+	result := DB.Model(user).Where("userid = ?", userdata.UserId).Update("password", newpwd)
+	if result.Error == nil {
+		return true
 	} else {
-		return "旧密码输入错误！"
+		return true
 	}
 }
 

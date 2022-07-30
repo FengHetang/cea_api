@@ -90,13 +90,15 @@ func ValOldPwd(c *gin.Context) {
 
 // UserUpdatePwd 修改密码
 func UserUpdatePwd(c *gin.Context) {
+	app := app.Gin{c}
 	NewPwd := c.Query("newpwd")
-	OldPwd := c.Query("oldpwd")
 	token := c.Request.Header.Get("token")
-	res := UserServer.UpdateUserPwd(OldPwd, NewPwd, token)
-	c.JSON(200, gin.H{
-		"res": res,
-	})
+	res := UserServer.UpdateUserPwd(NewPwd, token)
+	if res == true {
+		app.Response(http.StatusOK, e.Success, nil)
+	} else {
+		app.Response(http.StatusOK, e.EditOldPasswordError, nil)
+	}
 }
 
 func UserAdd(c *gin.Context) {
