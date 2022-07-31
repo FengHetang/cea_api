@@ -8,8 +8,6 @@
 
 package models
 
-import "fmt"
-
 type Unit struct {
 	Id   int    `json:"id"`
 	Unit string `json:"unit"`
@@ -30,18 +28,23 @@ func GetUnitMark(unit string) (data string) {
 	data = u.Mark
 	return
 }
-func AddUnit(unit, mark string) (res string) {
+
+func ValUnitName(unitname string) (res bool) {
 	var u Unit
-	DB.Where("Unit=?", unit).First(&u)
+	DB.Where("Unit = ?", unitname).First(&u)
 	if u.Id > 0 {
-		return "该单位已存在"
+		return false
 	} else {
-		result := DB.Create(&Unit{Unit: unit, Mark: mark})
-		if result.Error != nil {
-			return "新增单位失败"
-		}
-		return "新增单位成功"
+		return true
 	}
+}
+
+func AddUnit(unit, mark string) (res bool) {
+	result := DB.Create(&Unit{Unit: unit, Mark: mark})
+	if result.Error != nil {
+		return false
+	}
+	return true
 }
 
 type Department struct {
@@ -59,20 +62,23 @@ func GetDepartSer(unitmark, department string) (data int) {
 
 }
 
-func AddDepaerment(department, unitmark string) (res string) {
+func ValeDeaprtName(unitmark, deaprtname string) (res bool) {
 	var d Department
-	DB.Where("department = ? and unit_mark = ?", department, unitmark).Find(&d)
+	DB.Where("department = ? and unit_mark = ?", deaprtname, unitmark).First(&d)
 	if d.ID > 0 {
-		return "该部门已存在"
+		return false
 	} else {
-		departmentList := []Department{}
-		DB.Where("unit_mark = ?", unitmark).Find(&departmentList)
-		sernum := len(departmentList) + 1
-		fmt.Println(sernum)
-		result := DB.Create(&Department{Department: department, SerNum: sernum, UnitMark: unitmark})
-		if result.Error != nil {
-			return "部门新增失败"
-		}
+		return true
 	}
-	return "新增部门成功！"
+}
+
+func AddDepaerment(department, unitmark string) (res bool) {
+	departmentList := []Department{}
+	DB.Where("unit_mark = ?", unitmark).Find(&departmentList)
+	sernum := len(departmentList) + 1
+	result := DB.Create(&Department{Department: department, SerNum: sernum, UnitMark: unitmark})
+	if result.Error != nil {
+		return false
+	}
+	return true
 }

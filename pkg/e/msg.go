@@ -29,6 +29,10 @@ var magflags = map[int]string{
 	EditOldPasswordError: "修改密码错误",
 	UnitGetError:         "获取单位数据错误",
 	DepartGetError:       "获取部门数据错误",
+	UnitExists:           "单位已存在",
+	DepartExists:         "部门已存在",
+	UnitAddError:         "单位添加失败",
+	DepartAddError:       "部门添加失败",
 }
 
 func GetMsg(code int) string {

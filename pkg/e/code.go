@@ -30,4 +30,8 @@ const (
 
 	UnitGetError   = 20010 // 获取部门数据错误
 	DepartGetError = 20011 // 获取部门数据错误
+	UnitExists     = 20012 // 单位以存在
+	DepartExists   = 20013 // 部门已经存在
+	UnitAddError   = 20014 // 单位添加失败
+	DepartAddError = 20015 // 部门添加失败
 )

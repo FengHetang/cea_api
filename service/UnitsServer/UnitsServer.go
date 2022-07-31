@@ -15,9 +15,14 @@ type Unit struct {
 	Mark string
 }
 
-func (u *Unit) AddUnit() (res string) {
+func (u *Unit) ValUnitName() (res bool) {
+	return models.ValUnitName(u.Unit)
+}
+
+func (u *Unit) AddUnit() (res bool) {
 	return models.AddUnit(u.Unit, u.Mark)
 }
+
 func GetUnitMark(unit string) (data string) {
 	return models.GetUnitMark(unit)
 }
@@ -31,6 +36,11 @@ func GetDepartSer(unitmark, department string) (data int) {
 	return models.GetDepartSer(unitmark, department)
 }
 
-func (d *AddDepart) AddDepartment() (res string) {
+// ValeDeaprtName 验证部门是否存在
+func (d *AddDepart) ValeDeaprtName() (res bool) {
+	return models.ValeDeaprtName(d.Department, d.UnitMark)
+}
+
+func (d *AddDepart) AddDepartment() (res bool) {
 	return models.AddDepaerment(d.Department, d.UnitMark)
 }

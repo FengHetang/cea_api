@@ -17,18 +17,7 @@ import (
 	"net/http"
 )
 
-func GetDepart(c *gin.Context) {
-	app := app.Gin{c}
-	unitmark := c.Query("unit_mark")
-	departlist := []models.Department{}
-	result := models.DB.Where("unit_mark = ? ", unitmark).Find(&departlist)
-	if result.Error == nil {
-		app.Response(http.StatusOK, e.Success, departlist)
-	} else {
-		app.Response(http.StatusOK, e.DepartGetError, nil)
-	}
-}
-
+// GetUnit 获取单位数据
 func GetUnit(c *gin.Context) {
 	app := app.Gin{c}
 	unitList := []models.Unit{}
@@ -41,22 +30,70 @@ func GetUnit(c *gin.Context) {
 
 }
 
+// ValUnitName 验证单位名称是否存在
+func ValUnitName(c *gin.Context) {
+	app := app.Gin{c}
+	unitname := c.Query("unitname")
+	unitnameserver := UnitsServer.Unit{Unit: unitname}
+	res := unitnameserver.ValUnitName()
+	if res == true {
+		app.Response(http.StatusOK, e.Success, nil)
+	} else {
+		app.Response(http.StatusOK, e.UnitExists, nil)
+	}
+}
+
+// AddUnit 添加单位
 func AddUnit(c *gin.Context) {
+	app := app.Gin{c}
 	unit := c.Query("unitname")
 	mark := c.Query("mark")
 	addserver := &UnitsServer.Unit{unit, mark}
 	res := addserver.AddUnit()
-	c.JSON(200, gin.H{
-		"res": res,
-	})
+	if res == true {
+		app.Response(http.StatusOK, e.Success, nil)
+	} else {
+		app.Response(http.StatusOK, e.UnitAddError, nil)
+	}
 }
 
+// ValDepartName 验证部门是否存在
+func ValDepartName(c *gin.Context) {
+	app := app.Gin{c}
+	departname := c.Query("department")
+	unitmark := c.Query("unitmarl")
+	valdepartnameserver := UnitsServer.AddDepart{departname, unitmark}
+	res := valdepartnameserver.ValeDeaprtName()
+	if res == true {
+		app.Response(http.StatusOK, e.Success, nil)
+	} else {
+		app.Response(http.StatusOK, e.DepartExists, nil)
+	}
+}
+
+// GetDepart 获取部门数据
+func GetDepart(c *gin.Context) {
+	app := app.Gin{c}
+	unitmark := c.Query("unit_mark")
+	departlist := []models.Department{}
+	result := models.DB.Where("unit_mark = ? ", unitmark).Find(&departlist)
+	if result.Error == nil {
+		app.Response(http.StatusOK, e.Success, departlist)
+	} else {
+		app.Response(http.StatusOK, e.DepartGetError, nil)
+	}
+}
+
+// AddDeartment 添加部门
 func AddDeartment(c *gin.Context) {
+	app := app.Gin{c}
 	unitmark := c.Query("unitmark")
 	department := c.Query("deapartment")
 	addserver := &UnitsServer.AddDepart{UnitMark: unitmark, Department: department}
 	res := addserver.AddDepartment()
-	c.JSON(200, gin.H{
-		"res": res,
-	})
+	if res == true {
+		app.Response(http.StatusOK, e.Success, nil)
+	} else {
+		app.Response(http.StatusOK, e.DepartAddError, nil)
+	}
 }
