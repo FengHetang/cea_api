@@ -27,4 +27,7 @@ const (
 	UserPasswordError    = 20004 // 密码错误
 	OldPasswordError     = 20005 // 旧密码错误
 	EditOldPasswordError = 20006 // 修改密码错误
+
+	UnitGetError   = 20010 // 获取部门数据错误
+	DepartGetError = 20011 // 获取部门数据错误
 )

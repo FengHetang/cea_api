@@ -27,6 +27,8 @@ var magflags = map[int]string{
 	UserPasswordError:    "密码错误",
 	OldPasswordError:     "旧密码错误",
 	EditOldPasswordError: "修改密码错误",
+	UnitGetError:         "获取单位数据错误",
+	DepartGetError:       "获取部门数据错误",
 }
 
 func GetMsg(code int) string {

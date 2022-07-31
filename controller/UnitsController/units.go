@@ -10,25 +10,35 @@ package UnitsController
 
 import (
 	"cea_api/models"
-	"cea_api/service"
+	"cea_api/pkg/app"
+	"cea_api/pkg/e"
 	"cea_api/service/UnitsServer"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func GetDepart(c *gin.Context) {
+	app := app.Gin{c}
 	unitmark := c.Query("unit_mark")
-	departlist := service.GerDepart(unitmark)
-	c.JSON(200, gin.H{
-		"data": departlist,
-	})
+	departlist := []models.Department{}
+	result := models.DB.Where("unit_mark = ? ", unitmark).Find(&departlist)
+	if result.Error == nil {
+		app.Response(http.StatusOK, e.Success, departlist)
+	} else {
+		app.Response(http.StatusOK, e.DepartGetError, nil)
+	}
 }
 
 func GetUnit(c *gin.Context) {
+	app := app.Gin{c}
 	unitList := []models.Unit{}
-	models.DB.Find(&unitList)
-	c.JSON(200, gin.H{
-		"data": unitList,
-	})
+	result := models.DB.Find(&unitList)
+	if result.Error == nil {
+		app.Response(http.StatusOK, e.Success, unitList)
+	} else {
+		app.Response(http.StatusOK, e.UnitGetError, nil)
+	}
+
 }
 
 func AddUnit(c *gin.Context) {
