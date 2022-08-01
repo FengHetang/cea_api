@@ -9,12 +9,14 @@
 package main
 
 import (
+	"cea_api/middlewares"
 	"cea_api/router"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	r := gin.Default()
+	r.Use(middlewares.Cors())
 	router.UserRouters(r)
 	router.UnitrsRouters(r)
 
