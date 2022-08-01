@@ -31,11 +31,15 @@ func ValVerCode(c *gin.Context) {
 	app := app.Gin{c}
 	id := c.Query("codeid")
 	ret_captcha := c.Query("vercode")
-	res := service.VerityCaptcha(id, ret_captcha)
-	if res == false {
+	if ret_captcha == "" {
 		app.Response(http.StatusOK, e.Valerror, nil)
 	} else {
-		app.Response(http.StatusOK, e.Valright, nil)
+		res := service.VerityCaptcha(id, ret_captcha)
+		if res == false {
+			app.Response(http.StatusOK, e.Valerror, nil)
+		} else {
+			app.Response(http.StatusOK, e.Valright, nil)
+		}
 	}
 }
 

@@ -19,7 +19,7 @@ const (
 	TokenNull         = 10004 // 无token数据
 
 	Valerror = 10010 // 验证码错误
-	Valright = 10011 // 验证码错误
+	Valright = 10011 // 验证码正确
 
 	UserExits            = 20001 // 用户已存在
 	UserNoExits          = 20002 // 用户不存在
