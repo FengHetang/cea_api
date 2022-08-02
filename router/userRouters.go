@@ -20,7 +20,7 @@ func UserRouters(r *gin.Engine) {
 		UserRouter.GET("/val_vercode", UserController.ValVerCode)   // 验证 验证码
 		UserRouter.GET("/login", UserController.Login)              // 登录
 		UserRouter.GET("/ValToken", UserController.ValToken)        // 验证token
-		UserRouter.POST("/valoldpwd", UserController.ValOldPwd)     // 验证后端密码
+		UserRouter.POST("/valoldpwd", UserController.ValOldPwd)     // 验证旧密码
 		UserRouter.POST("/updatepwd", UserController.UserUpdatePwd) // 修改密码
 		UserRouter.POST("/valusername", UserController.ValUserName) // 验证用户名是否存在
 		UserRouter.POST("/adduser", UserController.UserAdd)         // 新增用户
