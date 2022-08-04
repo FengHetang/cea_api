@@ -14,7 +14,6 @@ import (
 	"cea_api/pkg/jwt"
 	"cea_api/service"
 	"cea_api/service/UserServer"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -71,7 +70,7 @@ func ValToken(c *gin.Context) {
 	app := app.Gin{c}
 	token := c.Query("token")
 	tokenvaldata, _ := jwt.ParseToken(token)
-	fmt.Println(tokenvaldata)
+	//fmt.Println(tokenvaldata)
 	if tokenvaldata != nil {
 		app.Response(http.StatusOK, e.Success, tokenvaldata)
 	} else {
@@ -139,10 +138,12 @@ func UserAdd(c *gin.Context) {
 
 }
 
+// GetMenu 获取菜单
 func GetMenu(c *gin.Context) {
 	app := app.Gin{c}
-
 	token := c.Request.Header.Get("token")
 	TokenData, _ := jwt.ParseToken(token)
-	app.Response(http.StatusOK, e.Success, TokenData)
+	res := UserServer.GetMenu(TokenData.UserType)
+	//fmt.Println(res)
+	app.Response(http.StatusOK, e.Success, res)
 }

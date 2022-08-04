@@ -86,3 +86,11 @@ func (l *LoginRes) CreatToken() (res interface{}) {
 	res = result
 	return res
 }
+
+func GetMenu(userType string) (res []models.Menu) {
+	//fmt.Println(userType)
+	model := models.UserType{UserType: userType}
+	res = model.GetUsertypeID()
+	//fmt.Println(res)
+	return res
+}
