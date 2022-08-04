@@ -138,3 +138,11 @@ func UserAdd(c *gin.Context) {
 	}
 
 }
+
+func GetMenu(c *gin.Context) {
+	app := app.Gin{c}
+
+	token := c.Request.Header.Get("token")
+	TokenData, _ := jwt.ParseToken(token)
+	app.Response(http.StatusOK, e.Success, TokenData)
+}

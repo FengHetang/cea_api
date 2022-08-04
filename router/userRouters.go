@@ -24,5 +24,6 @@ func UserRouters(r *gin.Engine) {
 		UserRouter.POST("/updatepwd", UserController.UserUpdatePwd) // 修改密码
 		UserRouter.POST("/valusername", UserController.ValUserName) // 验证用户名是否存在
 		UserRouter.POST("/adduser", UserController.UserAdd)         // 新增用户
+		UserRouter.GET("/getmenu", UserController.GetMenu)          //获取菜单
 	}
 }
