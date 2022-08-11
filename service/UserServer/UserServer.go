@@ -12,6 +12,7 @@ import (
 	"cea_api/models"
 	"cea_api/pkg/jwt"
 	"cea_api/service/UnitsServer"
+	"fmt"
 	"strconv"
 )
 
@@ -79,6 +80,7 @@ func (u *UserLogin) LoginCheck() (code int) {
 }
 
 func (l *LoginRes) CreatToken() (res interface{}) {
+
 	userid, realname, usertype := models.GetUserData(l.Name, l.Unit, l.Department)
 	token_ := jwt.TokenData{Realname: realname, UserType: usertype, Unit: l.Unit, Department: l.Department, UserId: userid}
 	token, _ := token_.GenToken(userid, realname, usertype, l.Unit, l.Department)
@@ -88,9 +90,9 @@ func (l *LoginRes) CreatToken() (res interface{}) {
 }
 
 func GetMenu(userType string) (res []models.Menu) {
-	//fmt.Println(userType)
+	fmt.Println(userType)
 	model := models.UserType{UserType: userType}
 	res = model.GetUsertypeID()
-	//fmt.Println(res)
+	fmt.Println(res)
 	return res
 }

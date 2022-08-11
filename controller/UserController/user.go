@@ -144,6 +144,5 @@ func GetMenu(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	TokenData, _ := jwt.ParseToken(token)
 	res := UserServer.GetMenu(TokenData.UserType)
-	//fmt.Println(res)
 	app.Response(http.StatusOK, e.Success, res)
 }
